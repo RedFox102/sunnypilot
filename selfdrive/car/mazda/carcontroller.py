@@ -104,17 +104,12 @@ class CarController:
         # Cancel Stock ACC if it's enabled while OP is disengaged
         # Send at a rate of 10hz until we sync with stock ACC state
         can_sends.append(mazdacan.create_button_cmd(self.packer, self.CP.carFingerprint, CS.crz_btns_counter, Buttons.CANCEL))
-    else:
-      self.brake_counter = 0
-      if CC.cruiseControl.resume and self.frame % 5 == 0:
-        # Mazda Stop and Go requires a RES button (or gas) press if the car stops more than 3 seconds
-        # Send Resume button when planner wants car to move
-        can_sends.append(mazdacan.create_button_cmd(self.packer, self.CP.carFingerprint, CS.crz_btns_counter, Buttons.RESUME))
-      elif CS.out.cruiseState.enabled and not self.CP.pcmCruiseSpeed:
-        self.cruise_button = self.get_cruise_buttons(CS, CC.vCruise)
-        if self.cruise_button is not None:
-          if self.frame % 10 == 0:
-            can_sends.append(mazdacan.create_button_cmd(self.packer, self.CP.carFingerprint, self.frame // 10, self.cruise_button))
+
+    if CS.out.cruiseState.enabled and not self.CP.pcmCruiseSpeed:
+      self.cruise_button = self.get_cruise_buttons(CS, CC.vCruise)
+      if self.cruise_button is not None:
+        if self.frame % 10 == 0:
+          can_sends.append(mazdacan.create_button_cmd(self.packer, self.CP.carFingerprint, self.frame // 10, self.cruise_button))
 
     self.apply_steer_last = apply_steer
 
