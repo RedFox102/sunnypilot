@@ -23,8 +23,8 @@ class CarInterface(CarInterfaceBase):
 
     ret.dashcamOnly = candidate not in (CAR.CX5_2022, CAR.CX9_2021)
 
-    ret.steerActuatorDelay = 0.3
-    ret.steerLimitTimer = 1.2
+    ret.steerActuatorDelay = 0.1
+    ret.steerLimitTimer = 0.8
     ret.tireStiffnessFactor = 0.70   # not optimized yet
 
     CarInterfaceBase.configure_torque_tune(candidate, ret.lateralTuning)
@@ -32,7 +32,7 @@ class CarInterface(CarInterfaceBase):
     if candidate in (CAR.CX5, CAR.CX5_2022):
       ret.mass = 3655 * CV.LB_TO_KG
       ret.wheelbase = 2.7
-      ret.steerRatio = 14.0
+      ret.steerRatio = 15.5
     elif candidate in (CAR.CX9, CAR.CX9_2021):
       ret.mass = 4217 * CV.LB_TO_KG
       ret.wheelbase = 3.1
@@ -46,7 +46,9 @@ class CarInterface(CarInterfaceBase):
       ret.wheelbase = 2.83
       ret.steerRatio = 15.5
 
-    ret.minSteerSpeed = LKAS_LIMITS.DISABLE_SPEED * CV.KPH_TO_MS
+    if candidate not in (CAR.CX5_2022, ):
+      ret.minSteerSpeed = LKAS_LIMITS.DISABLE_SPEED * CV.KPH_TO_MS
+
     ret.centerToFront = ret.wheelbase * 0.41
 
     return ret
